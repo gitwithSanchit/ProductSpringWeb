@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  pg-db:
+    image: postgres:15
+    container_name: pg-db
+    environment:
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    image: sanchit7237/productapp:latest  # ← Changed from "build: ."
+    container_name: product-spring-web
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Kolkata"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pg-db
+
+volumes:
+  postgres_data:
